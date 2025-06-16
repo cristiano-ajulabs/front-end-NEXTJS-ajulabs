@@ -1,80 +1,79 @@
 "use client"
-import { useEffect, useState, useRef } from 'react'
-import api from './services/api'
-import { get } from 'http'
+import { useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import api from '../app/services/api'
 
-
-export default function Home() {
-  type Usuario = {
-    id: string
-    name: string
-    email: string
-  }
-  const [usus, setUsus] = useState<Usuario[]>([])
+export default function CadastroLoginPage() {
+  const router = useRouter()
 
   const inputName = useRef<HTMLInputElement>(null)
-  const inputEmail = useRef<HTMLInputElement>(null)
-  const inputPassword= useRef<HTMLInputElement>(null)
+  const inputEmailCadastro = useRef<HTMLInputElement>(null)
+  const inputPasswordCadastro = useRef<HTMLInputElement>(null)
 
-  async function getUsers() {
-    const response = await api.get('/users')
-    setUsus(response.data)
-  }
+  const inputEmailLogin = useRef<HTMLInputElement>(null)
+  const inputPasswordLogin = useRef<HTMLInputElement>(null)
 
-  async function createUsers() {
-    if (
-      inputName.current &&
-      inputEmail.current &&
-      inputPassword.current
+  async function handleCadastro(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (inputName.current &&
+      inputEmailCadastro.current &&
+      inputPasswordCadastro.current
     ) {
-    await api.post("/register", {
-      name: inputName.current.value,
-      email: inputEmail.current.value,
-      password: inputPassword.current.value
-    })
+      const name = inputName.current.value
+      const email = inputEmailCadastro.current.value
+      const password = inputPasswordCadastro.current.value
 
-    getUsers()
+      try {
+        await api.post("/register", { name, email, password })
+        alert("Usuário cadastrado com sucesso!")
 
-    inputName.current.value = ""
-    inputEmail.current.value = ""
-    inputPassword.current.value = ""
+        inputName.current.value = ""
+        inputEmailCadastro.current.value = ""
+        inputPasswordCadastro.current.value = ""
+      } catch (err) {
+        alert("Erro ao cadastrar.")
+        console.error(err)
+      }
     }
   }
 
-  async function deleteUsers(id: string) {
-    try {
-      await api.delete(`/users/${id}`)
-      getUsers()
-    } catch (error) {
-      console.error("Erro ao deletar usuário", error)
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+
+    const email = inputEmailLogin.current?.value
+    const password = inputPasswordLogin.current?.value
+
+    try { 
+      await api.post("/login", {email, password}) 
+      router.push("/dashboard")
+    } catch (err) {
+      alert("Login inválido")
     }
   }
-
-  useEffect(() => {
-    getUsers()
-  }, [])
 
   return (
     <div className="container">
-      <form>
-        <h1>Cadastro de Usuário</h1>
-        <input placeholder="Name :" name="name" type="text" ref={inputName}/>
-        <input placeholder="E-mail :" type="email" name="email" ref={inputEmail}/>
-        <input placeholder="Password :" type="password" name="password" ref={inputPassword}/>
-        <button type="button" onClick={createUsers}>Cadastrar</button>
+      <form onSubmit={handleCadastro}>
+        <h2>Cadastro de Usuário</h2>
+        <span className='paragrafo'>
+          <p>Se Cadastre aqui! </p>
+        </span>
+        <input placeholder="Nome" type="text" ref={inputName} />
+        <input placeholder="Email" type="email" ref={inputEmailCadastro} />
+        <input placeholder="Senha" type="password" ref={inputPasswordCadastro} />
+        <button type="submit">Cadastrar</button>
       </form>
 
-      {usus.map((usu) => (
-        <div key={usu.id} className="card">
-          <div>
-            <p>Nome : <span>{usu.name}</span> </p>
-            <p>E-mail : <span>{usu.email}</span> </p>
-          </div>
-          <button onClick={() => deleteUsers(usu.id)}>
-            <img src='/assets/lixo.svg' alt="delete" />
-          </button>
-        </div>
-      ))}
+      <form onSubmit={handleLogin}>
+        <h2>Login</h2>
+        <span className='paragrafo'>
+          <p>Se Cadastre aqui! </p>
+        </span>
+        <input placeholder="Email" type="email" ref={inputEmailLogin} />
+        <input placeholder="Senha" type="password" ref={inputPasswordLogin} />
+        <button type="submit">Entrar</button>
+      </form>
     </div>
   )
 }

@@ -18,19 +18,34 @@ body {
   padding: 16px;
   font-family: sans-serif;
 }
-h1 {
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 2px;
+  gap: 2px;
+}
+
+.paragrafo {
+  color: #5c400c;
+  text-align: center;
+  font-size: 18px;
+}
+
+h1, 
+h2 {
   color: #fff;
+  text-align: center;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
   background-color: #a46b01;
   max-width: 100%;
-  width: 400px;
+  width: 450px;
   margin-bottom: 20px;
 
   & button {
@@ -61,10 +76,10 @@ form {
 
 .card {
   display: flex;
-  justify-content: space-between;
+  justify-content:space-between;
   align-items: center;
   background-color: #c88c1c9e;
-  margin-top: 10px;
+  margin: 10px;
   padding: 10px;
   width: 400px;
   border-radius: 10px;
