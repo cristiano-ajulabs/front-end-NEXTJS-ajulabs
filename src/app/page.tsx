@@ -28,6 +28,8 @@ export default function CadastroLoginPage() {
         await api.post("/register", { name, email, password })
         alert("Usuário cadastrado com sucesso!")
 
+        router.push("/login")
+
         inputName.current.value = ""
         inputEmailCadastro.current.value = ""
         inputPasswordCadastro.current.value = ""
@@ -38,19 +40,6 @@ export default function CadastroLoginPage() {
     }
   }
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-
-    const email = inputEmailLogin.current?.value
-    const password = inputPasswordLogin.current?.value
-
-    try { 
-      await api.post("/login", {email, password}) 
-      router.push("/dashboard")
-    } catch (err) {
-      alert("Login inválido")
-    }
-  }
 
   return (
     <div className="container">
@@ -63,16 +52,6 @@ export default function CadastroLoginPage() {
         <input placeholder="Email" type="email" ref={inputEmailCadastro} />
         <input placeholder="Senha" type="password" ref={inputPasswordCadastro} />
         <button type="submit">Cadastrar</button>
-      </form>
-
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
-        <span className='paragrafo'>
-          <p>Se Cadastre aqui! </p>
-        </span>
-        <input placeholder="Email" type="email" ref={inputEmailLogin} />
-        <input placeholder="Senha" type="password" ref={inputPasswordLogin} />
-        <button type="submit">Entrar</button>
       </form>
     </div>
   )

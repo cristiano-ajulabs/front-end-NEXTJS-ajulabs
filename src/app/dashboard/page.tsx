@@ -21,8 +21,6 @@ export default function Dashboard() {
     }
   }
 
-
-
   async function deleteUsers(id: string) {
     try {
       await api.delete(`/users/${id}`)
