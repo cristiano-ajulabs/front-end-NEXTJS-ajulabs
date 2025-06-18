@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState, useRef } from "react"
+import { useRouter } from 'next/navigation'
 import api from '../services/api'
 
 
@@ -11,6 +12,7 @@ type Usuario = {
 
 export default function Dashboard() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
+  const router = useRouter()
 
   async function getUsers() {
     try {
@@ -56,6 +58,7 @@ export default function Dashboard() {
             </div>
           ))
         )}
+        <button type="button" onClick={() => router.push("/")}>Sair</button>
       </form>
     </div>
   )
