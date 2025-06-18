@@ -37,6 +37,7 @@ export default function Login(){
         <input placeholder="Email" type="email" ref={inputEmailLogin} />
         <input placeholder="Senha" type="password" ref={inputPasswordLogin} />
         <button type="submit">Entrar</button>
+        <button type="button" onClick={() => router.push("/")}>Cadastre-se</button>
       </form>
         </div>
     )

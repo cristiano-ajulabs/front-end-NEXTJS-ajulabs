@@ -52,6 +52,7 @@ export default function CadastroLoginPage() {
         <input placeholder="Email" type="email" ref={inputEmailCadastro} />
         <input placeholder="Senha" type="password" ref={inputPasswordCadastro} />
         <button type="submit">Cadastrar</button>
+        <button type="button" onClick={() => router.push("/login")}>Já tenho cadastro</button>
       </form>
     </div>
   )
