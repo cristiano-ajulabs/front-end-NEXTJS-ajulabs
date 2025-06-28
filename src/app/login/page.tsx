@@ -21,7 +21,7 @@ export default function Login(){
 
     try { 
       await api.post("/login", {email, password}) 
-      router.push("/dashboard")
+      router.push("/cadastro")
     } catch (err) {
       alert("Login inválido")
     }
