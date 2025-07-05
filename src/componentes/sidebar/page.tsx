@@ -2,9 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 import '../../styles/sidebar.css'
 
 export default function Sidebar() {
+  const router = useRouter()
   const pathname = usePathname()
 
   const links = [
@@ -28,7 +31,7 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
-      <h2>SAIR</h2>
+        <button type="button" onClick={() => router.push("/login")} className='btn-side'>SAIR</button>
     </aside>
   )
 }

@@ -17,15 +17,28 @@
   background-color: #0F4C75;
   color: white;
   padding: 20px 0 20px 20px;
-  border-top-right-radius: 40px ;
+  border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
 }
 
-.sidebar h2 {
+.btn-side {
+  box-sizing: border-box;
+  max-width: 80px;
+  width: 100%;
+  background-color: #0F4C75;
+  color: #E5E5E5;
+  border: 1px solid transparent;
+  text-align: start;
   margin-top: 0;
   font-size: 30px;
   font-weight: 100;
   font-style: normal;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.btn-side:hover {
+  border-color: #BBE1FA;
 }
 
 .sidebar a {
@@ -44,9 +57,9 @@
 }
 
 .sidebar a:hover {
-    background-color: #BBE1FA;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+  background-color: #BBE1FA;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .main-content {

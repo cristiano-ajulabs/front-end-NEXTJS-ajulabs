@@ -17,10 +17,14 @@ export default function Login(){
       const password = inputPasswordLogin.current?.value
 
       try { 
-        await api.post("/auth/login", {email, password}) 
+        const response = await api.post("/auth/login", { email, password });
+
+        localStorage.setItem("token", response.data.access_token);
+ 
         router.push("/cadastro")
-      } catch (err) {
-        alert("Login inválido")
+      } catch (err: any) {
+        console.error("Erro ao logar:", err.response?.data || err.message);
+        alert("Login inválido");
       }
     }
 
