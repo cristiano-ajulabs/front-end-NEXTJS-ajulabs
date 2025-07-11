@@ -1,0 +1,148 @@
+/* dashboard.module.css */
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  color: #1f2937; /* cinza escuro */
+  background-color: #f9fafb; /* cinza claro de fundo */
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #1B262C;
+}
+
+.period {
+  font-size: 1rem;
+  color: #6b7280; /* cinza médio */
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: #f0f4f8;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.cardHeader h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1B262C;
+}
+
+.iconGreen {
+  color: #22c55e; /* verde */
+  font-size: 1.25rem;
+}
+
+.iconRed {
+  color: #ef4444; /* vermelho */
+  font-size: 1.25rem;
+}
+
+.cardValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.cardValueGreen {
+  color: #22c55e;
+}
+
+.cardValueRed {
+  color: #ef4444;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chartCard {
+  background: #f0f4f8;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.chartCard header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #111827;
+}
+
+.chartCard header p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.chartPlaceholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-style: italic;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.summarySection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.summaryCard {
+  background: #f0f4f8;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.summaryCard header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #374151;
+  text-transform: capitalize;
+}

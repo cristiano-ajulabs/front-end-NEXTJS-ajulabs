@@ -1,0 +1,120 @@
+.container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.headerRow {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.filterBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterGroupButton {
+  display: flex;
+  align-items: flex-end;
+}
+
+.input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.generateButton {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.generateButton:hover {
+  background-color: #1d4ed8;
+}
+
+.reportSection {
+  margin-top: 2rem;
+}
+
+/* Cabeçalho formal do relatório */
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #2563eb;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.orgName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin: 0;
+}
+
+.reportTitleFormal {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.reportTitle {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: #111;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #444;
+}
+
+.table tfoot td {
+  background-color: #fafafa;
+  font-weight: 700;
+}

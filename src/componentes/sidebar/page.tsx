@@ -1,9 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import {
+  LayoutDashboard,
+  PlusCircle,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Users,
+  FileText,
+  Shield
+} from 'lucide-react'
 import '../../styles/sidebar.css'
 
 export default function Sidebar() {
@@ -11,15 +18,18 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   const links = [
-    { href: '/antigoLogin', label: 'antigoLogin' },
-    { href: '/entradas', label: 'Entradas' },
-    { href: '/saidas', label: 'Saídas' },
-    { href: '/cadastro', label: 'Cadastro' },
+    { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
+    { href: '/contribuir', label: 'Nova Contribuição', icon: <PlusCircle size={18} /> },
+    { href: '/entradas', label: 'Entradas', icon: <ArrowDownCircle size={18} color="#16a34a" /> },
+    { href: '/saidas', label: 'Saídas', icon: <ArrowUpCircle size={18} color="#dc2626" /> },
+    { href: '/tesoureiro', label: 'Tesoureiros', icon: <Users size={18} /> },
+    { href: '/relatorios', label: 'Relatórios', icon: <FileText size={18} /> },
+    { href: '/obreiro', label: 'Pastoral', icon: <Shield size={18} /> },
   ]
 
   return (
     <aside className="sidebar">
-      <h2>LOGO</h2>
+      <h2 className="logo">LOGO</h2>
       <nav>
         {links.map(link => (
           <Link
@@ -27,11 +37,18 @@ export default function Sidebar() {
             href={link.href}
             className={`sidebar-link ${pathname === link.href ? 'active' : ''}`}
           >
-            {link.label}
+            <span className="icon">{link.icon}</span>
+            <span>{link.label}</span>
           </Link>
         ))}
       </nav>
-        <button type="button" onClick={() => router.push("/login")} className='btn-side'>SAIR</button>
+      <button
+        type="button"
+        onClick={() => router.push("/")}
+        className="btn-side"
+      >
+        SAIR
+      </button>
     </aside>
   )
 }

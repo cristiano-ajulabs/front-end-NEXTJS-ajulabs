@@ -1,0 +1,140 @@
+.container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.headerRow {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.filterBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterGroupButton {
+  display: flex;
+  align-items: flex-end;
+}
+
+.input,
+.select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.generateButton {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.generateButton:hover {
+  background-color: #1d4ed8;
+}
+
+.reportSection {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.reportBox {
+  border: 1px solid #2563eb;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  background: #f9fafb;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #2563eb;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #111;
+}
+
+.orgName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin: 0;
+}
+
+.reportTitleFormal {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.paymentBox {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0369a1;
+  background-color: #e0f2fe;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.paymentValue {
+  color: #134e4a;
+  font-size: 2.25rem;
+  margin-left: 0.5rem;
+}
+
+.footerText {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+.exportButton {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.exportButton:hover {
+  background-color: #1d4ed8;
+}

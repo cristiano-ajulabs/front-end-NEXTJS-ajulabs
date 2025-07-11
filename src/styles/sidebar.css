@@ -1,14 +1,11 @@
-/* styles/layout.css */
-
-
-
 .layout-container {
   display: flex;
   min-height: 100vh;
 }
 
 .sidebar {
-  max-width: 300px;
+  position: fixed;
+  max-width: 250px;
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -18,9 +15,55 @@
   color: white;
   padding: 20px 0 20px 20px;
   border-top-right-radius: 40px;
-  border-bottom-right-radius: 40px;
+  /* border-bottom-right-radius: 40px; */
 }
 
+.sidebar h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding-left: 10px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  margin: 10px 0;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar a.active {
+  background-color: #BBE1FA;
+  color: #0F4C75;
+  font-weight: bold;
+}
+
+.sidebar a:hover {
+  background-color: #BBE1FA;
+  color: #0F4C75;
+}
+
+.sidebar .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Botão sair */
 .btn-side {
   box-sizing: border-box;
   max-width: 80px;
@@ -35,34 +78,15 @@
   font-style: normal;
   cursor: pointer;
   border-radius: 8px;
+  margin-left: 10px;
 }
 
 .btn-side:hover {
   border-color: #BBE1FA;
 }
 
-.sidebar a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  margin: 15px 0;
-  padding: 20px;
-}
-
-.sidebar a.active {
-  background-color: #BBE1FA;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  color: #0F4C75;
-}
-
-.sidebar a:hover {
-  background-color: #BBE1FA;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-
 .main-content {
   flex: 1;
   padding: 20px;
+  margin-left: 300px;
 }

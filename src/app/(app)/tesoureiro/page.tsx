@@ -106,7 +106,7 @@ export default function CadastroDashboardPage() {
         <h2 className={styles.titulo}>Usuários Cadastrados</h2>
 
         {usuarios.length === 0 ? (
-          <p>Nenhum usuário encontrado.</p>
+          <p className={styles.emptyMessage}>Nenhum usuário encontrado.</p>
         ) : (
           <table className={styles.table}>
             <thead>

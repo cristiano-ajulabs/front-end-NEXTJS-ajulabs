@@ -21,7 +21,7 @@ export default function Login(){
 
         localStorage.setItem("token", response.data.access_token);
  
-        router.push("/cadastro")
+        router.push("/dashboard")
       } catch (err: any) {
         console.error("Erro ao logar:", err.response?.data || err.message);
         alert("Login inválido");
