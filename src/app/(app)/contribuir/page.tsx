@@ -1,8 +1,52 @@
 'use client'
 
+import { useState } from 'react'
 import styles from '../../../styles/contribuiForm.module.css'
 
+type Entrada = {
+  tipo_entrada: string;
+  valor: number;
+  data: string;
+  name: string;
+  tele: string;
+  descricao: string;
+};
+
 export default function ContributionFormPage() {
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const entrada: Entrada = {
+      tipo_entrada: formData.get('type')?.toString() || '',
+      valor: parseFloat(formData.get('amount')?.toString() || '0'),
+      data: new Date(formData.get('date')?.toString() || '').toISOString(),
+      name: formData.get('contributorName')?.toString() || '',
+      tele: formData.get('contributorContact')?.toString() || '',
+      descricao: formData.get('observations')?.toString() || '',
+    }
+    try {
+      const response = await fetch('http://localhost:3001/entrada', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entrada),
+      })
+      if (!response.ok) {
+        throw new Error('Erro ao salvar contribuição')
+      }
+      alert('Contribuição salva com sucesso!')
+      form.reset()
+    } catch (error) {
+      console.error(error)
+      alert('Erro ao salvar contribuição')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -16,7 +60,7 @@ export default function ContributionFormPage() {
           <p>Preencha os dados da contribuição recebida</p>
         </div>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.row}>
             <div className={styles.formGroup}>
               <label htmlFor="type">Tipo de Contribuição <span className={styles.obr}>*</span></label>
@@ -92,11 +136,17 @@ export default function ContributionFormPage() {
           </div>
 
           <div className={styles.actions}>
-            <button type="submit" className={styles.button}>Cadastrar Contribuição</button>
-            <button type="button" className={`${styles.button} ${styles.outline}`}>Limpar</button>
+            <button type="submit" className={styles.button} disabled={loading}>Cadastrar Contribuição</button>
+            <button
+              type="button"
+              className={`${styles.button} ${styles.outline}`}
+              onClick={() => document.querySelector('form')?.reset()}
+            >
+              Limpar
+            </button>
           </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }

@@ -1,36 +1,46 @@
+'use client';
 import styles from '../../../styles/entradas.module.css';
+import { useEffect, useState } from 'react';
+
+type Entrada = {
+  id: number;
+  tipo_entrada: string;
+  valor: number;
+  data: string;
+  name: string;
+  tele: string;
+  descricao: string;
+};
 
 export default function ContributionsListSimple() {
-  const contributions = [
-    {
-      id: '1',
-      date: '2025-07-01',
-      type: 'dizimo',
-      amount: 100,
-      contributorName: 'João Silva',
-      contributorContact: 'joao@email.com',
-      observations: 'Pagamento em dinheiro'
-    },
-    {
-      id: '2',
-      date: '2025-07-03',
-      type: 'oferta',
-      amount: 50,
-      contributorName: 'Maria Souza',
-      contributorContact: 'maria@exemplo.com',
-      observations: ''
-    }
-  ];
+  const [contributions, setContributions] = useState<Entrada[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    });
-  };
+  useEffect(() => {
+    fetch('http://localhost:3001/entrada')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setContributions(data);
+        } else {
+          console.error('Dados inesperados:', data);
+          setContributions([]);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Erro ao buscar entradas:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  const formatCurrency = (value: number) =>
+    value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const formatDate = (value: string) => {
-    return new Date(value).toLocaleDateString('pt-BR');
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('pt-BR');
   };
 
   const getTypeLabel = (type: string) => {
@@ -39,12 +49,21 @@ export default function ContributionsListSimple() {
       oferta: 'Oferta',
       campanha: 'Campanha',
       doacao: 'Doação',
-      outros: 'Outros'
+      outros: 'Outros',
+      venda: 'Venda',
     };
     return map[type] || type;
   };
 
-  const totalAmount = contributions.reduce((sum, c) => sum + c.amount, 0);
+  const totalAmount = contributions.reduce((sum, c) => sum + c.valor, 0);
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <p>Carregando entradas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -53,7 +72,7 @@ export default function ContributionsListSimple() {
         <p className={styles.subtitle}>Listagem de todas as contribuições recebidas</p>
       </div>
 
-      {/* Filtros */}
+      {/* Filtros - aqui ainda sem lógica */}
       <div className={styles.filtersBox}>
         <h3 className={styles.filtersTitle}>Filtros</h3>
         <div className={styles.filtersGrid}>
@@ -74,6 +93,7 @@ export default function ContributionsListSimple() {
               <option value="campanha">Campanha</option>
               <option value="doacao">Doação</option>
               <option value="outros">Outros</option>
+              <option value="venda">Venda</option>
             </select>
           </div>
           <div>
@@ -113,12 +133,12 @@ export default function ContributionsListSimple() {
             <tbody>
               {contributions.map((c) => (
                 <tr key={c.id}>
-                  <td>{formatDate(c.date)}</td>
-                  <td>{getTypeLabel(c.type)}</td>
-                  <td className={styles.amount}>{formatCurrency(c.amount)}</td>
-                  <td>{c.contributorName}</td>
-                  <td>{c.contributorContact || '-'}</td>
-                  <td>{c.observations || '-'}</td>
+                  <td>{formatDate(c.data)}</td>
+                  <td>{getTypeLabel(c.tipo_entrada)}</td>
+                  <td className={styles.amount}>{formatCurrency(c.valor)}</td>
+                  <td>{c.name || '-'}</td>
+                  <td>{c.tele || '-'}</td>
+                  <td>{c.descricao || '-'}</td>
                 </tr>
               ))}
             </tbody>
