@@ -2,15 +2,19 @@
 
 import { ArrowUpCircle, ArrowDownCircle, DollarSign } from 'lucide-react';
 import styles from '../../../styles/dashboard.module.css';
+import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const period = { startDate: '2025-01-01', endDate: '2025-01-31' };
 
-  const summary = {
-    totalContributions: 10000,
-    totalExpenses: 5000,
-    balance: 5000,
-  };
+
+  const [totalentradas, setTotalEntradas] = useState(0);
+  const [totalsaidas, setTotalSaidas] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [tipo, setTipo] = useState('');
+  const [ofert, setOfert] = useState(0);
+
+
 
   const contributionsByType = [
     { type: 'aluguel', total: 2000 },
@@ -22,11 +26,38 @@ export default function Dashboard() {
     { type: 'material', total: 300 },
   ];
 
+
+  useEffect(() => {
+    async function fetchTotals() {
+      try {
+        const resEntradas = await fetch('http://localhost:3001/entrada/total');
+        const entradas = await resEntradas.json();
+
+        const resSaidas = await fetch('http://localhost:3001/saida/total');
+        const saidas = await resSaidas.json();
+
+        setTotalEntradas(entradas);
+        setTotalSaidas(saidas);
+      } catch (error) {
+        console.error('Erro ao buscar totais', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchTotals();
+  }, []);
+
+
+  const saldo = totalentradas - totalsaidas;
+
   const formatCurrency = (value: number) =>
     value.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     });
+
+    if (loading) return <p>Carregando dados...</p>
 
   return (
     <div className={styles.container}>
@@ -46,7 +77,7 @@ export default function Dashboard() {
             <ArrowDownCircle className={styles.iconGreen} />
           </header>
           <p className={`${styles.cardValue} ${styles.cardValueGreen}`}>
-            {formatCurrency(summary.totalContributions)}
+            {formatCurrency(totalentradas)}
           </p>
         </article>
 
@@ -56,7 +87,7 @@ export default function Dashboard() {
             <ArrowUpCircle className={styles.iconRed} />
           </header>
           <p className={`${styles.cardValue} ${styles.cardValueRed}`}>
-            {formatCurrency(summary.totalExpenses)}
+            {formatCurrency(totalsaidas)}
           </p>
         </article>
 
@@ -65,18 +96,18 @@ export default function Dashboard() {
             <h2>Saldo</h2>
             <DollarSign
               className={
-                summary.balance >= 0 ? styles.iconGreen : styles.iconRed
+                saldo >= 0 ? styles.iconGreen : styles.iconRed
               }
             />
           </header>
           <p
             className={`${styles.cardValue} ${
-              summary.balance >= 0
+              saldo >= 0
                 ? styles.cardValueGreen
                 : styles.cardValueRed
             }`}
           >
-            {formatCurrency(summary.balance)}
+            {formatCurrency(saldo)}
           </p>
         </article>
       </section>
