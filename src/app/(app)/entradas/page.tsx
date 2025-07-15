@@ -15,6 +15,10 @@ type Entrada = {
 export default function ContributionsListSimple() {
   const [contributions, setContributions] = useState<Entrada[]>([]);
   const [loading, setLoading] = useState(true);
+  const [datainicial, setDataInicial] = useState('');
+  const [datafinal, setDataFinal] = useState('');
+  const [tiposelecionado, setTipoSelecionado] = useState('');
+  const [buscatexto, setBuscaTexto] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:3001/entrada')
@@ -55,6 +59,24 @@ export default function ContributionsListSimple() {
     return map[type] || type;
   };
 
+  const dadosFiltrados = contributions.filter((c) => {
+    const data = new Date(c.data);
+    const inicial = datainicial ? new Date(datainicial) : null;
+    const final = datafinal ? new Date(datafinal) : null;
+
+    const dentroDoPeriodo =
+      (!inicial || data >= inicial) &&
+      (!final || data <= final);
+
+    const tipoOk = !tiposelecionado || c.tipo_entrada === tiposelecionado;
+
+    const buscaOk = !buscatexto || (
+      c.name?.toLowerCase().includes(buscatexto.toLowerCase()) ||
+      c.descricao?.toLowerCase().includes(buscatexto.toLowerCase())
+    );
+
+    return dentroDoPeriodo && tipoOk && buscaOk
+  })
   const totalAmount = contributions.reduce((sum, c) => sum + c.valor, 0);
 
   if (loading) {
@@ -78,15 +100,29 @@ export default function ContributionsListSimple() {
         <div className={styles.filtersGrid}>
           <div>
             <label className={styles.label}>Data Inicial</label>
-            <input type="date" className={styles.input} />
+            <input
+              type="date"
+              className={styles.input}
+              value={datainicial}
+              onChange={(e) => setDataInicial(e.target.value)}
+            />
           </div>
           <div>
             <label className={styles.label}>Data Final</label>
-            <input type="date" className={styles.input} />
+            <input
+              type="date"
+              className={styles.input}
+              value={datafinal}
+              onChange={(e) => setDataFinal(e.target.value)}
+            />
           </div>
           <div>
             <label className={styles.label}>Tipo</label>
-            <select className={styles.input}>
+            <select
+              className={styles.input}
+              value={tiposelecionado}
+              onChange={(e) => setTipoSelecionado(e.target.value)}
+            >
               <option value="">Todos os tipos</option>
               <option value="dizimo">Dízimo</option>
               <option value="oferta">Oferta</option>
@@ -98,7 +134,13 @@ export default function ContributionsListSimple() {
           </div>
           <div>
             <label className={styles.label}>Buscar</label>
-            <input type="text" placeholder="Nome ou observações" className={styles.input} />
+            <input
+              type="text"
+              placeholder="Nome ou observações"
+              className={styles.input}
+              value={buscatexto}
+              onChange={(e) => setBuscaTexto(e.target.value)}
+            />
           </div>
         </div>
       </div>
@@ -107,10 +149,12 @@ export default function ContributionsListSimple() {
       <div className={styles.summaryBox}>
         <div className={styles.summaryInfo}>
           <span className={styles.summaryItem}>
-            Total de registros: <strong>{contributions.length}</strong>
+            Total de registros: <strong>{dadosFiltrados.length}</strong>
           </span>
           <span className={styles.summaryItem}>
-            Valor total: <strong className={styles.total}>{formatCurrency(totalAmount)}</strong>
+            Valor total: <strong className={styles.total}>{formatCurrency(
+              dadosFiltrados.reduce((sum, c) => sum + c.valor, 0)
+            )}</strong>
           </span>
         </div>
         <button className={styles.exportButton}>Exportar CSV</button>
@@ -131,7 +175,7 @@ export default function ContributionsListSimple() {
               </tr>
             </thead>
             <tbody>
-              {contributions.map((c) => (
+              {dadosFiltrados.map((c) => (
                 <tr key={c.id}>
                   <td>{formatDate(c.data)}</td>
                   <td>{getTypeLabel(c.tipo_entrada)}</td>
