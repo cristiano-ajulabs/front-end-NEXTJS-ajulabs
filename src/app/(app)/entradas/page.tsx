@@ -1,6 +1,7 @@
 'use client';
 import styles from '../../../styles/entradas.module.css';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Entrada = {
   id: number;
@@ -19,6 +20,11 @@ export default function ContributionsListSimple() {
   const [datafinal, setDataFinal] = useState('');
   const [tiposelecionado, setTipoSelecionado] = useState('');
   const [buscatexto, setBuscaTexto] = useState('');
+  const router = useRouter();
+
+  function handleClick() {
+    router.push('/contribuir')
+  }
 
   useEffect(() => {
     fetch('http://localhost:3001/entrada')
@@ -90,8 +96,14 @@ export default function ContributionsListSimple() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Entradas</h1>
-        <p className={styles.subtitle}>Listagem de todas as contribuições recebidas</p>
+        <div>
+          <h1 className={styles.title}>Entradas</h1>
+          <p className={styles.subtitle}>Listagem de todas as contribuições recebidas</p>
+        </div>
+        <button 
+        className={styles.newButton}
+        onClick={handleClick}
+        >Nova Despesa</button>
       </div>
 
       {/* Filtros - aqui ainda sem lógica */}

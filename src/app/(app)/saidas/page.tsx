@@ -1,75 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from '../../../styles/saidas.module.css';
+import { Divide, ToolCase } from "lucide-react";
+
+type Saida = {
+  id: number;
+  data: string;
+  tipo: string;
+  valor: number;
+  beneficiario: string;
+  descricao: string;
+  observacao: string;
+};
 
 
 export default function ExpensesList() {
-  // Estado dos filtros
-  const [filters, setFilters] = useState({
-    startDate: "",
-    endDate: "",
-    type: "",
-    search: "",
-  });
+  const [expenses, setExpenses] = useState<Saida[]>([]);
+  const [loading, setLoading] = useState (true);
+  const [datainicial, setDataInicial] = useState('');
+  const [ datafinal, setDataFinal] = useState('');
+  const [tiposelecionado, setTipoSelecionado] = useState('');
+  const [buscatexto, setBuscaTexto] = useState('');
+  const router = useRouter();
 
-  // Dados mock de despesas
-  const expenses = [
-    {
-      id: "1",
-      date: "2025-07-01",
-      type: "aluguel",
-      amount: 1200,
-      beneficiary: "Igreja Local",
-      description: "Pagamento do aluguel mensal",
-      observations: "Pago via transferência",
-    },
-    {
-      id: "2",
-      date: "2025-07-03",
-      type: "material",
-      amount: 150,
-      beneficiary: "Loja de papelaria",
-      description: "Compra de materiais para o culto infantil",
-      observations: "",
-    },
-  ];
+  function handleClick() {
+    router.push('/debitar')
+  }
 
-  // Atualiza filtro
-  const handleFilterChange = (field: string, value: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // Filtra as despesas conforme filtros aplicados
-  const filteredExpenses = expenses.filter((expense) => {
-    if (filters.startDate && expense.date < filters.startDate) return false;
-    if (filters.endDate && expense.date > filters.endDate) return false;
-    if (filters.type && filters.type !== "" && expense.type !== filters.type)
-      return false;
-    if (filters.search) {
-      const search = filters.search.toLowerCase();
-      if (
-        !expense.beneficiary.toLowerCase().includes(search) &&
-        !(expense.description?.toLowerCase().includes(search)) &&
-        !(expense.observations?.toLowerCase().includes(search))
-      ) {
-        return false;
+useEffect(() => {
+  fetch('http://localhost:3001/saida')
+    .then((res) => res.json())
+    .then((data) => {
+      if (Array.isArray(data)) {
+        setExpenses(data);
+      } else {
+        console.error('Dados inesperados:', data);
+        setExpenses([])
       }
-    }
-    return true;
-  });
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('Erro ao buscar saidas:', err);
+      setLoading(false);
+    });
+}, []);
+
+
 
   const formatCurrency = (value: number) =>
-    value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
 
-  const formatDate = (value: string) =>
-    new Date(value).toLocaleDateString("pt-BR");
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString("pt-BR");
+  }
 
   const getTypeLabel = (type: string) => {
     const map: Record<string, string> = {
@@ -88,7 +75,34 @@ export default function ExpensesList() {
     return map[type] || type;
   };
 
-  const totalAmount = filteredExpenses.reduce((sum, c) => sum + c.amount, 0);
+  const dadosFiltrados = expenses.filter((c) => {
+    const data = new Date(c.data);
+    const inicial = datainicial ? new Date(datainicial) : null;
+    const final = datafinal ? new Date(datafinal) : null;
+
+    const dentroDoPeriodo =
+    (!inicial || data >= inicial) &&
+    (!final || data <= final);
+
+    const tipoOk = !tiposelecionado || c.tipo === tiposelecionado;
+
+    const buscaOk = !buscatexto || (
+      c.beneficiario?.toLowerCase().includes(buscatexto.toLowerCase()) ||
+      c.descricao?.toLowerCase().includes(buscatexto.toLowerCase())
+    );
+
+    return dentroDoPeriodo && tipoOk && buscaOk
+  })
+
+  const totalAmount = expenses.reduce((sum, c) => sum + c.valor, 0);
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <p>Carregando saidas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -98,7 +112,10 @@ export default function ExpensesList() {
           <h1 className={styles.title}>Saídas</h1>
           <p className={styles.subtitle}>Listagem de todas as despesas realizadas</p>
         </div>
-        <button className={styles.newButton}>Nova Despesa</button>
+        <button 
+        className={styles.newButton}
+        onClick={handleClick}
+        >Nova Despesa</button>
       </div>
 
       {/* Filtros */}
@@ -109,8 +126,8 @@ export default function ExpensesList() {
             type="date"
             id="startDate"
             className={styles.input}
-            value={filters.startDate}
-            onChange={(e) => handleFilterChange("startDate", e.target.value)}
+            value={datainicial}
+            onChange={(e) => setDataInicial((e.target.value))}
           />
         </div>
 
@@ -120,8 +137,8 @@ export default function ExpensesList() {
             type="date"
             id="endDate"
             className={styles.input}
-            value={filters.endDate}
-            onChange={(e) => handleFilterChange("endDate", e.target.value)}
+            value={datafinal}
+            onChange={(e) => setDataFinal(e.target.value)}
           />
         </div>
 
@@ -130,8 +147,8 @@ export default function ExpensesList() {
           <select
             id="type"
             className={styles.input}
-            value={filters.type}
-            onChange={(e) => handleFilterChange("type", e.target.value)}
+            value={tiposelecionado}
+            onChange={(e) => setTipoSelecionado(e.target.value)}
           >
             <option value="">Todos</option>
             <option value="aluguel">Aluguel</option>
@@ -155,8 +172,8 @@ export default function ExpensesList() {
             id="search"
             placeholder="Beneficiário ou descrição"
             className={styles.input}
-            value={filters.search}
-            onChange={(e) => handleFilterChange("search", e.target.value)}
+            value={buscatexto}
+            onChange={(e) => setBuscaTexto(e.target.value)}
           />
         </div>
       </div>
@@ -165,11 +182,13 @@ export default function ExpensesList() {
       <div className={styles.summaryBox}>
         <div className={styles.summaryInfo}>
           <span className={styles.summaryItem}>
-            Total de registros: <strong>{filteredExpenses.length}</strong>
+            Total de registros: <strong>{dadosFiltrados.length}</strong>
           </span>
           <span className={styles.summaryItem}>
             Valor total:{" "}
-            <strong className={styles.total}>{formatCurrency(totalAmount)}</strong>
+            <strong className={styles.total}>{formatCurrency(
+              dadosFiltrados.reduce((sum, c) => sum + c.valor, 0)
+              )}</strong>
           </span>
         </div>
         <button className={styles.exportButton}>Exportar CSV</button>
@@ -190,14 +209,14 @@ export default function ExpensesList() {
               </tr>
             </thead>
             <tbody>
-              {filteredExpenses.map((c) => (
+              {dadosFiltrados.map((c) => (
                 <tr key={c.id}>
-                  <td>{formatDate(c.date)}</td>
-                  <td>{getTypeLabel(c.type)}</td>
-                  <td className={styles.amount}>{formatCurrency(c.amount)}</td>
-                  <td>{c.beneficiary}</td>
-                  <td>{c.description || "-"}</td>
-                  <td>{c.observations || "-"}</td>
+                  <td>{formatDate(c.data)}</td>
+                  <td>{getTypeLabel(c.tipo)}</td>
+                  <td className={styles.amount}>{formatCurrency(c.valor)}</td>
+                  <td>{c.beneficiario || '-'}</td>
+                  <td>{c.descricao || "-"}</td>
+                  <td>{c.observacao || "-"}</td>
                 </tr>
               ))}
             </tbody>

@@ -22,6 +22,7 @@ export default function Sidebar() {
     { href: '/contribuir', label: 'Nova Contribuição', icon: <PlusCircle size={18} /> },
     { href: '/entradas', label: 'Entradas', icon: <ArrowDownCircle size={18} color="#16a34a" /> },
     { href: '/saidas', label: 'Saídas', icon: <ArrowUpCircle size={18} color="#dc2626" /> },
+    { href: '/debitar', label: 'Novo Débito', icon: <ArrowUpCircle size={18} color="#dc9626ff" /> },
     { href: '/tesoureiro', label: 'Tesoureiros', icon: <Users size={18} /> },
     { href: '/relatorios', label: 'Relatórios', icon: <FileText size={18} /> },
     { href: '/obreiro', label: 'Pastoral', icon: <Shield size={18} /> },
