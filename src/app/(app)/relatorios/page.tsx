@@ -6,20 +6,42 @@ import styles from "../../../styles/relatorio.module.css";
 export default function ReportPage() {
   const [contributor, setContributor] = useState("");
   const [year, setYear] = useState("");
-  const [showReport, setShowReport] = useState(false);
+  const [showreport, setShowReport] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [reportdata, setReportData] = useState<any[]>([]);
 
-  // Simula dados do relatório (você poderá substituir por dados reais da API)
-  const mockReportData = [
-    { date: "2025-01-15", type: "Dízimo", amount: 150 },
-    { date: "2025-03-10", type: "Oferta", amount: 100 },
-    { date: "2025-07-22", type: "Campanha", amount: 200 },
-  ];
+  const formatCurrency = (value: number) =>
+    value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  
+  function formatarData(dataStr: string) {
+    const date = new Date(dataStr);
+    if (isNaN(date.getTime())) return 'Data inválida';
+    return date.toLocaleDateString('pt-BR');
+  }
 
-  const handleGenerate = () => {
-    if (contributor && year) {
-      setShowReport(true);
-    } else {
+
+  const handleGenerate = async () => {
+    if (!contributor || !year) {
       alert("Por favor, preencha o nome do contribuinte e o ano.");
+      return;
+    }
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        nome: contributor,
+        ano: year,
+      });
+      const res = await fetch(`http://localhost:3001/entrada/relatorio?${params.toString()}`);
+      if (!res.ok) throw new Error("Erro ao buscar dados");
+
+      const data = await res.json();
+      setReportData(data);
+      setShowReport(true);
+    } catch (error) {
+      console.error("Erro ao gerar relatório:", error);
+      alert("Erro ao gerar relatório.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +88,7 @@ export default function ReportPage() {
         </div>
       </section>
 
-      {showReport && (
+      {showreport && (
         <section className={styles.reportSection}>
           {/* Cabeçalho para impressão ou apresentação formal */}
           <div className={styles.reportHeader}>
@@ -83,36 +105,37 @@ export default function ReportPage() {
             Contribuinte: <strong>{contributor}</strong> | Ano: <strong>{year}</strong>
           </h3>
 
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Valor (R$)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockReportData.map((item, idx) => (
-                <tr key={idx}>
-                  <td>{new Date(item.date).toLocaleDateString("pt-BR")}</td>
-                  <td>{item.type}</td>
-                  <td>{item.amount.toFixed(2)}</td>
+          <div className={styles.containeTable}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Tipo</th>
+                  <th>Valor (R$)</th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={2} style={{ fontWeight: "bold" }}>
-                  Total
-                </td>
-                <td style={{ fontWeight: "bold" }}>
-                  {mockReportData
-                    .reduce((acc, cur) => acc + cur.amount, 0)
-                    .toFixed(2)}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+              </thead>
+              <tbody>
+                {reportdata.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{formatarData(item.data)}</td>
+                    <td>{item.tipo_entrada}</td>
+                    <td>{formatCurrency(item.valor)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={2} style={{ fontWeight: "bold" }}>
+                    Total
+                  </td>
+                  <td style={{ fontWeight: "bold" }}>
+                    {formatCurrency(reportdata
+                      .reduce((acc, cur) => acc + cur.valor, 0))}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </section>
       )}
     </div>

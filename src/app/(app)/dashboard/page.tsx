@@ -11,20 +11,10 @@ export default function Dashboard() {
   const [totalentradas, setTotalEntradas] = useState(0);
   const [totalsaidas, setTotalSaidas] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [tipo, setTipo] = useState('');
-  const [ofert, setOfert] = useState(0);
+  const [entradasportipo, setEntradasPorTipo] = useState<any[]>([]);
+  const [saidasportipo, setSaidasPorTipo] = useState<any[]>([]);
 
 
-
-  const contributionsByType = [
-    { type: 'aluguel', total: 2000 },
-    { type: 'agua', total: 500 },
-  ];
-
-  const expensesByType = [
-    { type: 'manutencao', total: 1000 },
-    { type: 'material', total: 300 },
-  ];
 
 
   useEffect(() => {
@@ -36,8 +26,16 @@ export default function Dashboard() {
         const resSaidas = await fetch('http://localhost:3001/saida/total');
         const saidas = await resSaidas.json();
 
+        const resumoEn = await fetch('http://localhost:3001/entrada/resumo');
+        const EntradasRes = await resumoEn.json();
+
+        const resumoSai = await fetch('http://localhost:3001/saida/resumo');
+        const SaidasRes = await resumoSai.json();
+
         setTotalEntradas(entradas);
         setTotalSaidas(saidas);
+        setEntradasPorTipo(EntradasRes);
+        setSaidasPorTipo(SaidasRes);
       } catch (error) {
         console.error('Erro ao buscar totais', error);
       } finally {
@@ -68,6 +66,7 @@ export default function Dashboard() {
           {new Date(period.endDate).toLocaleDateString('pt-BR')}
         </p>
       </header>
+      
 
       {/* Cards resumo */}
       <section className={styles.cards}>
@@ -138,10 +137,10 @@ export default function Dashboard() {
             <h3>Resumo de Contribuições</h3>
           </header>
           <div className={styles.summaryList}>
-            {contributionsByType.map((item) => (
-              <div key={item.type} className={styles.summaryItem}>
-                <span>{item.type.replace('_', ' ')}</span>
-                <span>{formatCurrency(item.total)}</span>
+            {entradasportipo.map((item) => (
+              <div key={item.tipo} className={styles.summaryItem}>
+                <span>{item.tipo.replace('_', ' ')}</span>
+                <span>{formatCurrency(Number(item.total))}</span>
               </div>
             ))}
           </div>
@@ -152,10 +151,10 @@ export default function Dashboard() {
             <h3>Resumo de Despesas</h3>
           </header>
           <div className={styles.summaryList}>
-            {expensesByType.map((item) => (
-              <div key={item.type} className={styles.summaryItem}>
-                <span>{item.type.replace('_', ' ')}</span>
-                <span>{formatCurrency(item.total)}</span>
+            {saidasportipo.map((item) => (
+              <div key={item.tipo} className={styles.summaryItem}>
+                <span>{item.tipo.replace('_', ' ')}</span>
+                <span>{formatCurrency(Number(item.total))}</span>
               </div>
             ))}
           </div>
